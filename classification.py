@@ -79,3 +79,5 @@ plt.show()
 
 plt.imshow(X_test[2])
 plt.show()
+
+keras.backend.clear_session()

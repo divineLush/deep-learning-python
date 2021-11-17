@@ -32,12 +32,12 @@ tf.random.set_seed(42)
 print(X_train.shape)
 
 # create NN structure
-# single neuron in the output layer since it's the regression problem
-model = keras.models.Sequential([
-    keras.layers.Dense(30, activation="relu", input_shape=[8]),
-    keras.layers.Dense(30, activation="relu"),
-    keras.layers.Dense(1)
-])
+input_ = keras.layers.Input(shape=X_train.shape[1:])
+hidden1 = keras.layers.Dense(30, activation="relu")(input_)
+hidden2 = keras.layers.Dense(30, activation="relu")(hidden1)
+concat = keras.layers.concatenate([input_, hidden2])
+output = keras.layers.Dense(1)(concat)
+model = keras.models.Model(inputs=[input_], outputs=[output])
 
 # SGD = stochastic gradient descent
 model.compile(loss="mean_squared_error", optimizer=keras.optimizers.SGD(lr=1e-3), metrics=["mae"])
@@ -57,3 +57,5 @@ X_new = X_test[:3]
 y_pred = model.predict(X_new)
 print(y_pred)
 print(y_test[:3])
+
+keras.backend.clear_session()
